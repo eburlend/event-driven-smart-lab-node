@@ -1,0 +1,19 @@
+# Register this folder as an ESP-IDF component
+# A component is a self contained module that can contain source code
+# contain source code, headers and dependencies
+idf_component_register(
+    # Means: "Compile these .c files"
+    SRC "dht11.c"
+
+    # Only headers in this folder are public
+    # This is why "#include dht11.h" works in main.c
+    INCLUDE_DIRS "include"
+
+
+    
+    # Declares dependencies on other ESP-IDF components
+    # This tells the ESP-IDF: "Before building this component, 
+    # make sure the 'dht' component (The DHT sensor library) is 
+    # built and headers are available."
+    REQUIRES dht
+) 
