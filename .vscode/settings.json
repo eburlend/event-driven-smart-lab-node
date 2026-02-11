@@ -15,5 +15,6 @@
     "--background-index",
     "--query-driver=**",
     "--compile-commands-dir=c:\\VSCode-Workspace\\WorkSpaceSE-410-2026\\event-driven-smart-lab-node\\build"
-  ]
+  ],
+  "idf.currentSetup": "C:\\Users\\eburl\\esp\\v5.2.6\\esp-idf"
 }
