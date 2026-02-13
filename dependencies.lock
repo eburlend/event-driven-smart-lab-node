@@ -48,6 +48,6 @@ dependencies:
 direct_dependencies:
 - esp-idf-lib/dht
 - idf
-manifest_hash: 3671216d8015b4e09bceb6389a8042eaff9bfb92dd76dd1ca2f6c133a1555b35
+manifest_hash: 3fee03b2c3421211cc194fb310a2d7c905b3e0f3ca3a2e8bd4dce7a14741b3f0
 target: esp32
 version: 2.0.0
