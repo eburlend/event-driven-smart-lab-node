@@ -3,7 +3,7 @@
 # contain source code, headers and dependencies
 idf_component_register(
     # Means: "Compile these .c files"
-    SRC "dht11.c"
+    SRCS "dht11.c"
 
     # Only headers in this folder are public
     # This is why "#include dht11.h" works in main.c

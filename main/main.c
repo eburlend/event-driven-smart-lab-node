@@ -52,14 +52,16 @@ void app_main(void)
         {
             // If successful, log the humidity and temp values
             // % .1f formats the float values to one decimal place
-            ESP_LOGI(TAG, "Humidity: %.1f %% Temp: %% %.1f F (%.1f C)",
-            reading.humidity, reading.temperature_f, reading.temperature_c)
+            ESP_LOGI(TAG, "Humidity: %.1f %% Temp: %.1f F (%.1f C)",
+            reading.humidity, reading.temperature_f, reading.temperature_c);
         }
         else
         {
             // Pause the task to 2000 milliseconds (2 sec)
             vTaskDelay(pdMS_TO_TICKS(2000));
         }
+            vTaskDelay(pdMS_TO_TICKS(2000));
+
     }
 
 }

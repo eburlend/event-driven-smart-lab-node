@@ -62,4 +62,5 @@ C:/VSCode-Workspace/WorkSpaceSE-410-2026/event-driven-smart-lab-node/build/esp-i
 C:/VSCode-Workspace/WorkSpaceSE-410-2026/event-driven-smart-lab-node/build/esp-idf/spiffs/libspiffs.a
 C:/VSCode-Workspace/WorkSpaceSE-410-2026/event-driven-smart-lab-node/build/esp-idf/wifi_provisioning/libwifi_provisioning.a
 C:/VSCode-Workspace/WorkSpaceSE-410-2026/event-driven-smart-lab-node/build/esp-idf/esp-idf-lib__dht/libesp-idf-lib__dht.a
+C:/VSCode-Workspace/WorkSpaceSE-410-2026/event-driven-smart-lab-node/build/esp-idf/dht11/libdht11.a
 C:/VSCode-Workspace/WorkSpaceSE-410-2026/event-driven-smart-lab-node/build/esp-idf/main/libmain.a

@@ -20,7 +20,7 @@
 // char * means pointer to characters
 // * means it points to the first char
 // DHT11_WRAPPER becomes the label in the serial monitor
-static const char *TAG = "DHT11_WRAPPER"
+static const char *TAG = "DHT11_WRAPPER";
 
 // Stores the GPIO pin number used for data line
 // Initialized to GPIO_NUM_NC (Not Connected) to indicate that
@@ -45,7 +45,7 @@ void dht11_init(gpio_num_t pin)
     s_pin = pin;
     // %d: insert and integer here
 
-    ESP_LOGIC(TAG, "Initialized DHT11 on GPIO %d", (int)s_pin);
+    ESP_LOGI(TAG, "Initialized DHT11 on GPIO %d", (int)s_pin);
 }
 
 // Reads humidity and temperature
@@ -57,7 +57,7 @@ esp_err_t dht11_read(dht11_reading_t *out)
     if(s_pin == GPIO_NUM_NC)
     {
         // Log the data and return fail
-        ESP_LOG(TAG, "dht11_inint() not called");
+        ESP_LOGE(TAG, "dht11_inint() not called");
         return ESP_FAIL;
     }
 
@@ -87,7 +87,7 @@ esp_err_t dht11_read(dht11_reading_t *out)
     if(err != ESP_OK)
     {
         // Log an error
-        ESP_LOG(TAG, "dht_read_float_data failed");
+        ESP_LOGE(TAG, "dht_read_float_data failed");
         return err;
     }
 

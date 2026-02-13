@@ -1,7 +1,7 @@
 {
     "version":            "1.2",
     "project_name":       "event-driven-smart-lab-node",
-    "project_version":    "v1.0.0-11-g4ceacea-dirty",
+    "project_version":    "v1.0.0-12-g30d29cf-dirty",
     "project_path":       "C:/VSCode-Workspace/WorkSpaceSE-410-2026/event-driven-smart-lab-node",
     "idf_path":           "C:/Users/eburl/esp/v5.2.6/esp-idf",
     "build_dir":          "C:/VSCode-Workspace/WorkSpaceSE-410-2026/event-driven-smart-lab-node/build",
@@ -153,14 +153,14 @@
             "target": "___idf_dht11",
             "prefix": "idf",
             "dir": "C:/VSCode-Workspace/WorkSpaceSE-410-2026/event-driven-smart-lab-node/components/dht11",
-            "type": "CONFIG_ONLY",
+            "type": "LIBRARY",
             "lib": "__idf_dht11",
             "reqs": [ "esp-idf-lib__dht" ],
             "priv_reqs": [],
             "managed_reqs": [],
             "managed_priv_reqs": [],
-            "file": "",
-            "sources": [],
+            "file": "C:/VSCode-Workspace/WorkSpaceSE-410-2026/event-driven-smart-lab-node/build/esp-idf/dht11/libdht11.a",
+            "sources": [ "C:/VSCode-Workspace/WorkSpaceSE-410-2026/event-driven-smart-lab-node/components/dht11/dht11.c" ],
             "include_dirs": [ "include" ]
         },
         "driver": {

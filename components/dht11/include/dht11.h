@@ -17,7 +17,7 @@
 // Defines a structure to hold a complete DHT11 sensor reading
 // This groups related data together so we can return
 // everything in single, clean object
-typedef struct dht11
+typedef struct 
 {
     // Relative humidity reading in percent (%RH)
     float humidity;
