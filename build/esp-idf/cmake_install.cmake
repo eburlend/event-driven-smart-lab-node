@@ -414,6 +414,16 @@ endif()
 
 if(NOT CMAKE_INSTALL_LOCAL_ONLY)
   # Include the install script for the subdirectory.
+  include("C:/VSCode-Workspace/WorkSpaceSE-410-2026/event-driven-smart-lab-node/build/esp-idf/wifi_manager/cmake_install.cmake")
+endif()
+
+if(NOT CMAKE_INSTALL_LOCAL_ONLY)
+  # Include the install script for the subdirectory.
+  include("C:/VSCode-Workspace/WorkSpaceSE-410-2026/event-driven-smart-lab-node/build/esp-idf/mqtt_manager/cmake_install.cmake")
+endif()
+
+if(NOT CMAKE_INSTALL_LOCAL_ONLY)
+  # Include the install script for the subdirectory.
   include("C:/VSCode-Workspace/WorkSpaceSE-410-2026/event-driven-smart-lab-node/build/esp-idf/esp-idf-lib__esp_idf_lib_helpers/cmake_install.cmake")
 endif()
 
@@ -424,7 +434,7 @@ endif()
 
 if(NOT CMAKE_INSTALL_LOCAL_ONLY)
   # Include the install script for the subdirectory.
-  include("C:/VSCode-Workspace/WorkSpaceSE-410-2026/event-driven-smart-lab-node/build/esp-idf/dht11/cmake_install.cmake")
+  include("C:/VSCode-Workspace/WorkSpaceSE-410-2026/event-driven-smart-lab-node/build/esp-idf/dht11_wrapper/cmake_install.cmake")
 endif()
 
 if(NOT CMAKE_INSTALL_LOCAL_ONLY)
