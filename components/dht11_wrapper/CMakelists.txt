@@ -1,5 +1,8 @@
+# Build configuration for the dht11_wrapper component
+# This component wraps the DHT11 sensor library for easier use
+
 idf_component_register(
-    SRCS "dht11_wrapper.c"
-    INCLUDE_DIRS "."
-    REQUIRES driver esp-idf-lib__dht
+    SRCS "dht11_wrapper.c"                # Source file for sensor wrapper
+    INCLUDE_DIRS "."                      # Include directory for headers
+    REQUIRES driver esp-idf-lib__dht      # Required GPIO driver and DHT library
 )
