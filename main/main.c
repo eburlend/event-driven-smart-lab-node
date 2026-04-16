@@ -13,7 +13,7 @@
 static const char *TAG = "MAIN";
 
 // GPIO pin used for the DHT11 data line
-#define DHT11_DATA_GPIO GPIO_NUM_5
+#define DHT11_DATA_GPIO GPIO_NUM_4
 
 void app_main(void)
 {
