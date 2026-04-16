@@ -1,10 +1,12 @@
 #include <stdio.h>
+#include <stdbool.h>
 #include "freertos/FreeRTOS.h"
 #include "freertos/task.h"
 #include "esp_log.h"
 #include "nvs_flash.h"
 #include "driver/gpio.h"
 #include "esp_err.h"
+#include "cJSON.h"
 
 #include "wifi_manager.h"
 #include "mqtt_manager.h"
@@ -12,59 +14,65 @@
 
 static const char *TAG = "MAIN";
 
-// GPIO pin used for the DHT11 data line
-#define DHT11_DATA_GPIO GPIO_NUM_4
+// DHT11 data pin
+#define DHT11_DATA_GPIO GPIO_NUM_5
+
+// Single telemetry topic for Grafana
+#define MQTT_TOPIC_TELEMETRY "gcu/lab/env/telemetry"
 
 void app_main(void)
 {
     dht11_data_t reading;
-    char temp_payload[32];
-    char humidity_payload[32];
     esp_err_t ret;
 
-    ESP_LOGI(TAG, "Booting...");
+    ESP_LOGI(TAG, "Booting system...");
 
     // Initialize NVS
-    // Required for Wi-Fi to work correctly
     ret = nvs_flash_init();
-    if (ret == ESP_ERR_NVS_NO_FREE_PAGES || ret == ESP_ERR_NVS_NEW_VERSION_FOUND) {
+    if (ret == ESP_ERR_NVS_NO_FREE_PAGES || ret == ESP_ERR_NVS_NEW_VERSION_FOUND)
+    {
         ESP_ERROR_CHECK(nvs_flash_erase());
         ret = nvs_flash_init();
     }
     ESP_ERROR_CHECK(ret);
 
-    ESP_LOGI(TAG, "Starting DHT11 MQTT node");
+    ESP_LOGI(TAG, "Starting DHT11 MQTT Grafana node");
 
-    // Initialize the DHT11 wrapper with the selected GPIO pin
+    // Initialize sensor
     dht11_wrapper_init(DHT11_DATA_GPIO);
-
-    // Small startup delay to allow the sensor to stabilize
     vTaskDelay(pdMS_TO_TICKS(2000));
 
-    // Start Wi-Fi connection process
+    // Start Wi-Fi
     wifi_init_sta();
 
-    // Wait until Wi-Fi connected before continuing
-    while (!wifi_is_connected()) {
+    // Wait for Wi-Fi connection
+    while (!wifi_is_connected())
+    {
         ESP_LOGI(TAG, "Waiting for Wi-Fi connection...");
         vTaskDelay(pdMS_TO_TICKS(500));
     }
 
     ESP_LOGI(TAG, "Wi-Fi connected, starting MQTT");
 
-    // Start MQTT after Wi-Fi is up
+    // Start MQTT
     mqtt_app_start();
 
-    // Give MQTT time to connect to the broker
-    vTaskDelay(pdMS_TO_TICKS(3000));
+    // Wait for MQTT connection
+    while (!mqtt_is_connected())
+    {
+        ESP_LOGI(TAG, "Waiting for MQTT connection...");
+        vTaskDelay(pdMS_TO_TICKS(500));
+    }
 
-    while (1) {
+    while (1)
+    {
         bool read_ok = false;
 
-        // Try reading the DHT11 a few times before giving up
-        // This helps with occasional timing-sensitive sensor failures
-        for (int attempt = 0; attempt < 3; attempt++) {
-            if (dht11_wrapper_read(&reading) == ESP_OK) {
+        // Retry sensor read a few times
+        for (int attempt = 0; attempt < 3; attempt++)
+        {
+            if (dht11_wrapper_read(&reading) == ESP_OK)
+            {
                 read_ok = true;
                 break;
             }
@@ -73,23 +81,47 @@ void app_main(void)
             vTaskDelay(pdMS_TO_TICKS(2000));
         }
 
-        if (read_ok) {
-            // Convert sensor values into strings for MQTT publishing
-            snprintf(temp_payload, sizeof(temp_payload), "%.1f", reading.temperature_c);
-            snprintf(humidity_payload, sizeof(humidity_payload), "%.1f", reading.humidity);
+        if (read_ok)
+        {
+            // Build one JSON message for Grafana
+            cJSON *root = cJSON_CreateObject();
 
-            // Publish temperature and humidity to separate MQTT topics
-            mqtt_publish("gcu/swe410/dht11/temperature", temp_payload);
-            mqtt_publish("gcu/swe410/dht11/humidity", humidity_payload);
+            if (root != NULL)
+            {
+                cJSON_AddStringToObject(root, "device", "esp32-01");
+                cJSON_AddNumberToObject(root, "temperature", reading.temperature_c);
+                cJSON_AddNumberToObject(root, "humidity", reading.humidity);
 
-            // Log current values for verification in the serial monitor
-            ESP_LOGI(TAG, "Temp=%s C  Humidity=%s%%",
-                     temp_payload, humidity_payload);
-        } else {
+                char *json_payload = cJSON_PrintUnformatted(root);
+
+                if (json_payload != NULL)
+                {
+                    ESP_LOGI(TAG, "Message to %s: %s", MQTT_TOPIC_TELEMETRY, json_payload);
+
+                    mqtt_publish(MQTT_TOPIC_TELEMETRY, json_payload);
+
+                    ESP_LOGI(TAG, "Published successfully.");
+
+                    cJSON_free(json_payload);
+                }
+                else
+                {
+                    ESP_LOGW(TAG, "Failed to create JSON payload");
+                }
+
+                cJSON_Delete(root);
+            }
+            else
+            {
+                ESP_LOGW(TAG, "Failed to create JSON object");
+            }
+        }
+        else
+        {
             ESP_LOGW(TAG, "Failed to read DHT11 after retries");
         }
 
-        // Wait 5 seconds before the next reading
+        // Publish every 5 seconds
         vTaskDelay(pdMS_TO_TICKS(5000));
     }
 }
