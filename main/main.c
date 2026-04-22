@@ -11,14 +11,19 @@
 #include "wifi_manager.h"
 #include "mqtt_manager.h"
 #include "dht11_wrapper.h"
+#include "door_sensor_wrapper.h"
 
 static const char *TAG = "MAIN";
 
 // DHT11 data pin
 #define DHT11_DATA_GPIO GPIO_NUM_5
 
-// Single telemetry topic for Grafana
+// Door sensor interrupt pin
+#define DOOR_SENSOR_GPIO GPIO_NUM_18
+
+// MQTT topics
 #define MQTT_TOPIC_TELEMETRY "gcu/lab/env/telemetry"
+#define MQTT_TOPIC_DOOR_EVENT "gcu/lab/door/event"
 
 void app_main(void)
 {
@@ -36,10 +41,11 @@ void app_main(void)
     }
     ESP_ERROR_CHECK(ret);
 
-    ESP_LOGI(TAG, "Starting DHT11 MQTT Grafana node");
+    ESP_LOGI(TAG, "Starting DHT11 + door sensor MQTT node");
 
-    // Initialize sensor
+    // Initialize sensors
     dht11_wrapper_init(DHT11_DATA_GPIO);
+    door_sensor_init(DOOR_SENSOR_GPIO);
     vTaskDelay(pdMS_TO_TICKS(2000));
 
     // Start Wi-Fi
@@ -97,23 +103,20 @@ void app_main(void)
                 if (json_payload != NULL)
                 {
                     ESP_LOGI(TAG, "Message to %s: %s", MQTT_TOPIC_TELEMETRY, json_payload);
-
                     mqtt_publish(MQTT_TOPIC_TELEMETRY, json_payload);
-
-                    ESP_LOGI(TAG, "Published successfully.");
-
+                    ESP_LOGI(TAG, "Published telemetry successfully.");
                     cJSON_free(json_payload);
                 }
                 else
                 {
-                    ESP_LOGW(TAG, "Failed to create JSON payload");
+                    ESP_LOGW(TAG, "Failed to create telemetry JSON payload");
                 }
 
                 cJSON_Delete(root);
             }
             else
             {
-                ESP_LOGW(TAG, "Failed to create JSON object");
+                ESP_LOGW(TAG, "Failed to create telemetry JSON object");
             }
         }
         else
@@ -121,7 +124,42 @@ void app_main(void)
             ESP_LOGW(TAG, "Failed to read DHT11 after retries");
         }
 
-        // Publish every 5 seconds
+        // Publish a message only when the door sensor has been triggered
+        if (door_sensor_was_triggered())
+        {
+            cJSON *door_root = cJSON_CreateObject();
+
+            if (door_root != NULL)
+            {
+                cJSON_AddStringToObject(door_root, "device", "esp32-01");
+                cJSON_AddStringToObject(door_root, "sensor", "door");
+                cJSON_AddStringToObject(door_root, "event", "touched");
+                cJSON_AddNumberToObject(door_root, "gpio", DOOR_SENSOR_GPIO);
+                cJSON_AddNumberToObject(door_root, "level", door_sensor_get_level());
+
+                char *door_payload = cJSON_PrintUnformatted(door_root);
+
+                if (door_payload != NULL)
+                {
+                    ESP_LOGI(TAG, "Door event on GPIO %d", DOOR_SENSOR_GPIO);
+                    ESP_LOGI(TAG, "Message to %s: %s", MQTT_TOPIC_DOOR_EVENT, door_payload);
+                    mqtt_publish(MQTT_TOPIC_DOOR_EVENT, door_payload);
+                    cJSON_free(door_payload);
+                }
+                else
+                {
+                    ESP_LOGW(TAG, "Failed to create door event JSON payload");
+                }
+
+                cJSON_Delete(door_root);
+            }
+            else
+            {
+                ESP_LOGW(TAG, "Failed to create door event JSON object");
+            }
+        }
+
+        // Publish telemetry every 5 seconds
         vTaskDelay(pdMS_TO_TICKS(5000));
     }
 }
