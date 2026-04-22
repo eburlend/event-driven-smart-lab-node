@@ -439,6 +439,11 @@ endif()
 
 if(NOT CMAKE_INSTALL_LOCAL_ONLY)
   # Include the install script for the subdirectory.
+  include("C:/VSCode-Workspace/WorkSpaceSE-410-2026/event-driven-smart-lab-node/build/esp-idf/door_sensor_wrapper/cmake_install.cmake")
+endif()
+
+if(NOT CMAKE_INSTALL_LOCAL_ONLY)
+  # Include the install script for the subdirectory.
   include("C:/VSCode-Workspace/WorkSpaceSE-410-2026/event-driven-smart-lab-node/build/esp-idf/main/cmake_install.cmake")
 endif()
 

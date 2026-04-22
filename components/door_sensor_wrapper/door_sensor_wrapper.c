@@ -13,7 +13,7 @@ static gpio_num_t s_door_pin = GPIO_NUM_NC;
 static volatile bool s_interrupt_triggered = false;
 
 // ISR function for the door sensor pin
-static void IRAM_ATTR door_sensor_isr_handler(void *arg)
+static void door_sensor_isr_handler(void *arg)
 {
     s_interrupt_triggered = true;
 }

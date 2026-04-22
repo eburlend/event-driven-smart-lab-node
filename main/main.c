@@ -16,7 +16,7 @@
 static const char *TAG = "MAIN";
 
 // DHT11 data pin
-#define DHT11_DATA_GPIO GPIO_NUM_5
+#define DHT11_DATA_GPIO GPIO_NUM_4
 
 // Door sensor interrupt pin
 #define DOOR_SENSOR_GPIO GPIO_NUM_18
