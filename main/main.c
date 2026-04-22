@@ -95,8 +95,8 @@ void app_main(void)
             if (root != NULL)
             {
                 cJSON_AddStringToObject(root, "device", "esp32-01");
-                cJSON_AddNumberToObject(root, "temperature", reading.temperature_c);
-                cJSON_AddNumberToObject(root, "humidity", reading.humidity);
+                cJSON_AddNumberToObject(root, "temperature", reading.temperature_c / 10.0);
+                cJSON_AddNumberToObject(root, "humidity", reading.humidity / 10.0);
 
                 char *json_payload = cJSON_PrintUnformatted(root);
 
