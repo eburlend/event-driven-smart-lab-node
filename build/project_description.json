@@ -1,7 +1,7 @@
 {
     "version":            "1.2",
     "project_name":       "event-driven-smart-lab-node",
-    "project_version":    "v1.0.0-23-g4cab0df-dirty",
+    "project_version":    "v1.0.0-24-gfcda4c7-dirty",
     "project_path":       "C:/VSCode-Workspace/WorkSpaceSE-410-2026/event-driven-smart-lab-node",
     "idf_path":           "C:/Users/eburl/esp/v5.2.6/esp-idf",
     "build_dir":          "C:/VSCode-Workspace/WorkSpaceSE-410-2026/event-driven-smart-lab-node/build",
@@ -2227,6 +2227,18 @@
             "dir": "C:/VSCode-Workspace/WorkSpaceSE-410-2026/event-driven-smart-lab-node/components/door_sensor_wrapper",
             "lib": "__idf_door_sensor_wrapper",
             "reqs": [ "driver" ],
+            "priv_reqs": [],
+            "managed_reqs": [],
+            "managed_priv_reqs": [],
+            "include_dirs": [ "." ]
+        },
+        "motion_sensor_wrapper": {
+            "alias": "idf::motion_sensor_wrapper",
+            "target": "___idf_motion_sensor_wrapper",
+            "prefix": "idf",
+            "dir": "C:/VSCode-Workspace/WorkSpaceSE-410-2026/event-driven-smart-lab-node/components/motion_sensor_wrapper",
+            "lib": "__idf_motion_sensor_wrapper",
+            "reqs": [],
             "priv_reqs": [],
             "managed_reqs": [],
             "managed_priv_reqs": [],
